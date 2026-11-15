@@ -1,0 +1,6 @@
+*.json
+!.devcontainer/devcontainer.json
+*creds*
+*.pem
+*kubeconfig*
+.env
