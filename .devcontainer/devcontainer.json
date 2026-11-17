@@ -14,7 +14,7 @@
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
 
-  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postCreateCommand": "bash .devcontainer/post-create",
 
   "mounts": [
     "source=k3s-kubeconfig,target=/home/vscode/.kube,type=volume",
