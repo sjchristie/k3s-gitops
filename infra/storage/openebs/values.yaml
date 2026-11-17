@@ -1,0 +1,21 @@
+# Only the LocalPV hostpath provisioner is wanted. Every other engine is off.
+engines:
+  local:
+    lvm:
+      enabled: false
+    zfs:
+      enabled: false
+  replicated:
+    mayastor:
+      enabled: false
+
+# The pre-upgrade check Job only matters on upgrades. Turn it off.
+preUpgradeHook:
+  enabled: false
+
+# Chart 4.6.0 also installs log collection by default: Loki (with MinIO
+# for its storage) and Alloy. A single Pi does not need them.
+loki:
+  enabled: false
+alloy:
+  enabled: false
