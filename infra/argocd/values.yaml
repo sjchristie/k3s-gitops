@@ -1,0 +1,4 @@
+# Argo CD Helm values: only what differs from the chart defaults.
+global:
+  networkPolicy:
+    create: false
