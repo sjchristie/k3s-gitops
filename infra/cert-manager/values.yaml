@@ -1,0 +1,8 @@
+# The chart does not install the CRDs unless asked.
+crds:
+  enabled: true
+
+# Check the DNS-01 TXT record against public resolvers, not the cluster's
+# resolver, which on a home network can lag or never see it.
+dns01RecursiveNameserversOnly: true
+dns01RecursiveNameservers: "1.1.1.1:53,8.8.8.8:53"
