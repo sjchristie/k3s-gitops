@@ -4,3 +4,5 @@
 *.pem
 *kubeconfig*
 .env
+
+infra/**/charts/
