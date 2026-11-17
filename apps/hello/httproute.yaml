@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: hello
+spec:
+  parentRefs:
+    - name: gateway-internal
+      namespace: gateway
+      sectionName: https
+  hostnames:
+    - hello.christiehome.work
+  rules:
+    - backendRefs:
+        - name: hello
+          port: 80
