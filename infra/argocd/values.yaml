@@ -2,3 +2,11 @@
 global:
   networkPolicy:
     create: false
+
+configs:
+  cm:
+    # Let Kustomize render Helm charts: the infra folders use helmCharts.
+    kustomize.buildOptions: --enable-helm
+  params:
+    # TLS ends at the Gateway, so the Argo CD server speaks plain HTTP.
+    server.insecure: true
