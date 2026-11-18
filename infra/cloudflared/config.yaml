@@ -3,8 +3,6 @@ credentials-file: /etc/cloudflared/creds/credentials.json
 metrics: 0.0.0.0:2000
 no-autoupdate: true
 ingress:
-  - hostname: tunnel.christiehome.work
-    service: hello_world
   - hostname: demo.christiehome.work
     service: https://cilium-gateway-gateway-external.gateway.svc.cluster.local:443
     originRequest:
