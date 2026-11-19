@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager-config
+  name: openebs
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/sjchristie/k3s-gitops.git
     targetRevision: main
-    path: infra/cert-manager-config
+    path: infra/storage/openebs
   destination:
     server: https://kubernetes.default.svc
-    namespace: cert-manager
+    namespace: openebs
