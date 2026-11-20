@@ -29,15 +29,21 @@ CFG
 chmod 600 ~/.ssh/config
 
 echo "==> cloudflared..."
-curl -L --fail -o /tmp/cloudflared.deb "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-${ARCH}.deb"
+CLOUDFLARED_VERSION=2026.10.7
+curl -L --fail -o /tmp/cloudflared.deb "https://github.com/cloudflare/cloudflared/releases/download/${CLOUDFLARED_VERSION}/cloudflared-linux-${ARCH}.deb"
 sudo dpkg -i /tmp/cloudflared.deb && rm /tmp/cloudflared.deb
 
 echo "==> k9s..."
 curl -L --fail -o /tmp/k9s.tgz "https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_${ARCH}.tar.gz"
 sudo tar xzf /tmp/k9s.tgz -C /usr/local/bin k9s && rm /tmp/k9s.tgz
 
+echo "==> kustomize..."
+KUSTOMIZE_VERSION=5.8.1
+curl -L --fail -o /tmp/kustomize.tgz "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_${ARCH}.tar.gz"
+sudo tar xzf /tmp/kustomize.tgz -C /usr/local/bin kustomize && rm /tmp/kustomize.tgz
+
 echo "==> Tools used by the build chapters..."
 sudo apt-get update
-sudo apt-get install -y dnsutils iputils-ping netcat-openbsd python3-yaml
+sudo apt-get install -y dnsutils iputils-ping netcat-openbsd python3-yaml vim
 
 echo "==> Done."
