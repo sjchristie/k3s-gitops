@@ -1,0 +1,7 @@
+- Cluster:
+    - Argo CD:
+        href: https://argocd.christiehome.work
+        description: GitOps
+    - Hello:
+        href: https://hello.christiehome.work
+        description: Test app
