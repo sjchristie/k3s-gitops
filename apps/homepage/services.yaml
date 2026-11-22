@@ -5,3 +5,6 @@
     - Hello:
         href: https://hello.christiehome.work
         description: Test app
+    - SearXNG:
+        href: https://searxng.christiehome.work
+        description: Private search
