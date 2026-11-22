@@ -8,7 +8,7 @@ spec:
       namespace: gateway
       sectionName: https
   hostnames:
-    - searxng.
+    - searxng.christiehome.work
   rules:
     - backendRefs:
         - name: searxng
