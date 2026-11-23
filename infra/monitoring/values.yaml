@@ -1,0 +1,106 @@
+# kube-prometheus-stack 92.22.0: only what differs from the chart defaults.
+
+# K3s runs the scheduler, the controller manager and etcd inside its own
+# process, and this build turns kube-proxy off. The chart would scrape
+# endpoints that do not exist and report them as down all the time.
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
+kubeEtcd:
+  enabled: false
+
+# The long-window API server rules read a lot of data and overloaded
+# Prometheus on the Pi in the earlier build. Switched off. Everything else
+# in the default rules stays on.
+defaultRules:
+  rules:
+    kubeApiserverAvailability: false
+    kubeApiserverBurnrate: false
+    kubeApiserverHistogram: false
+    kubeApiserverSlos: false
+
+# The admission webhook is switched off, and so is the operator's TLS: the
+# operator's certificate comes from the webhook machinery, and with only one
+# of them off the operator waits for a certificate that never arrives. This
+# removes the Helm hook Jobs and the two webhook configurations. The cost: a
+# broken rule object is no longer rejected when it is created.
+prometheusOperator:
+  admissionWebhooks:
+    enabled: false
+  tls:
+    enabled: false
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+# One-minute intervals halve the work and the writes to the disk. Prometheus
+# keeps ten days of data, capped at 12 GB, on a disposable OpenEBS hostpath
+# volume. A hostpath volume does not enforce its size, so retentionSize is
+# the real limit. In the earlier build Prometheus used about 951 MiB, so the
+# ceiling is 1024Mi.
+prometheus:
+  prometheusSpec:
+    scrapeInterval: 60s
+    evaluationInterval: 60s
+    retention: 10d
+    retentionSize: 12GB
+    resources:
+      requests:
+        memory: 400Mi
+      limits:
+        memory: 1024Mi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: openebs-hostpath
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 15Gi
+
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        memory: 32Mi
+      limits:
+        memory: 128Mi
+
+# The Grafana login comes from a Secret made with kubectl (step 5), so the
+# password is never in Git. Grafana keeps no volume: its dashboards come from
+# the chart, so a restart loses only what you created by hand in the web page.
+grafana:
+  admin:
+    existingSecret: grafana-admin
+    userKey: admin-user
+    passwordKey: admin-password
+  resources:
+    requests:
+      memory: 128Mi
+    limits:
+      memory: 384Mi
+  sidecar:
+    resources:
+      requests:
+        memory: 32Mi
+      limits:
+        memory: 128Mi
+
+kube-state-metrics:
+  resources:
+    requests:
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+
+prometheus-node-exporter:
+  resources:
+    requests:
+      memory: 16Mi
+    limits:
+      memory: 64Mi
