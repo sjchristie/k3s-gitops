@@ -74,6 +74,14 @@ alertmanager:
 # The Grafana login comes from a Secret made with kubectl (step 5), so the
 # password is never in Git. Grafana keeps no volume: its dashboards come from
 # the chart, so a restart loses only what you created by hand in the web page.
+# Grafana 13.3.0, the version this chart installs, starts slowly on the Pi. On
+# 23 Nov 2026 its first run was killed over and over by the chart's default
+# liveness probe, which starts 60 seconds after the container and gives up
+# after 10 failures, while the web server was not yet listening. The startup
+# probe holds the other probes off for up to ten minutes. The chart also sets
+# GOMEMLIMIT to 90% of the memory limit, and the container used 317 MB against
+# the old limit of 384Mi, so the limit is raised to 768Mi. Which of the two
+# changes fixes it was not established.
 grafana:
   admin:
     existingSecret: grafana-admin
@@ -83,7 +91,13 @@ grafana:
     requests:
       memory: 128Mi
     limits:
-      memory: 384Mi
+      memory: 768Mi
+  startupProbe:
+    httpGet:
+      path: /api/health
+      port: grafana
+    periodSeconds: 10
+    failureThreshold: 60
   sidecar:
     resources:
       requests:
